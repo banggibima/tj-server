@@ -1,11 +1,8 @@
 import dotenv from "dotenv";
 
-dotenv.config({
-  path: `.env.local`,
-});
+dotenv.config();
 
 const env = {
-  node_env: process.env.NODE_ENV,
   host: process.env.HOST,
   port: process.env.PORT,
   jwt: {
