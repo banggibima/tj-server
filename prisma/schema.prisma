@@ -15,8 +15,8 @@ model user {
   password   String   @db.VarChar(255)
   profile_id String?  @db.VarChar(255)
   role_id    String?  @db.VarChar(255)
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @updatedAt @db.Timestamp(6)
   profile    profile? @relation(fields: [profile_id], references: [id])
   role       role?    @relation(fields: [role_id], references: [id])
 }
@@ -25,16 +25,16 @@ model profile {
   id         String   @id @default(uuid()) @db.VarChar(255)
   first_name String?  @db.VarChar(255)
   last_name  String?  @db.VarChar(255)
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @updatedAt @db.Timestamp(6)
   user       user[]
 }
 
 model role {
   id         String       @id @default(uuid()) @db.VarChar(255)
-  name       String       @unique @db.VarChar(255)
-  created_at DateTime     @default(now())
-  updated_at DateTime     @updatedAt
+  name       String?      @unique @db.VarChar(255)
+  created_at DateTime     @default(now()) @db.Timestamp(6)
+  updated_at DateTime     @updatedAt @db.Timestamp(6)
   permission permission[]
   user       user[]
 }
@@ -43,7 +43,7 @@ model permission {
   id         String   @id @default(uuid()) @db.VarChar(255)
   name       String?  @unique @db.VarChar(255)
   role_id    String?  @db.VarChar(255)
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @updatedAt @db.Timestamp(6)
   role       role?    @relation(fields: [role_id], references: [id])
 }
