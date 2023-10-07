@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { argon2id, hash } from "argon2";
 import User from "./entity";
 import validator from "../interface/validator";
 
@@ -27,12 +28,16 @@ async function selectUniqueById(path: User["id"]) {
 
 async function insertMany(payloads: User[]) {
   const items = validator.insertMany.parse(payloads);
+  const hashed = await hash(items.map((item) => item.password).join(), {
+    type: argon2id,
+    raw: false,
+  });
   const users = await prisma.user.createMany({
     data: items.map((item) => ({
       email: item.email,
       phone: item.phone,
       username: item.username,
-      password: item.password,
+      password: hashed,
       role_id: item.role_id,
       profile_id: item.profile_id,
     })),
@@ -42,29 +47,36 @@ async function insertMany(payloads: User[]) {
 
 async function insert(payload: User) {
   const item = validator.insert.parse(payload);
+  const hashed = await hash(item.password, {
+    type: argon2id,
+    raw: false,
+  });
   const user = await prisma.user.create({
     data: {
       email: item.email,
       phone: item.phone,
       username: item.username,
-      password: item.password,
+      password: hashed,
       role_id: item.role_id,
       profile_id: item.profile_id,
     },
   });
-  console.log(user);
   return user;
 }
 
 async function edit(path: User["id"], payload: User) {
   const item = validator.edit.parse(payload);
+  const hashed = await hash(item.password, {
+    type: argon2id,
+    raw: false,
+  });
   const user = await prisma.user.update({
     where: { id: path },
     data: {
       email: item.email,
       phone: item.phone,
       username: item.username,
-      password: item.password,
+      password: hashed,
       role_id: item.role_id,
       profile_id: item.profile_id,
     },

@@ -11,6 +11,7 @@
     "lint": "eslint --ext .ts src"
   },
   "dependencies": {
+    "argon2": "^0.31.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "dotenv-flow": "^4.0.0",
